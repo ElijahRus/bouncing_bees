@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Bouncing Bees</title>
+	<link href="./resources/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+	<canvas id="canvas" width="700" height="400"> </canvas>
+	<script>
+		var Bee= function () {
+		  this.x= 350;
+		  this.y= 200;
+		  this.xSpeed= Math.random() * 10 - 5;
+		  this.ySpeed= Math.random() * 10 - 5;
+		};
+
+		var circle= function (x, y, radius, fillCircle) {
+		  ctx.beginPath();
+		  ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+		  if(fillCircle){
+		  	ctx.fill();
+		  }else{
+		  	ctx.stroke();
+		  }
+		};
+		var drawBee= function (x, y) {
+		  ctx.lineWidth= 2;
+		  ctx.strokeStyle= "Black";
+		  ctx.fillStyle= "Gold";
+
+		  circle(x, y, 8, true);
+		  circle(x, y, 8, false);
+		  circle(x - 5, y - 11, 5, false);
+		  circle(x + 5, y - 11, 5, false);
+		  circle(x - 2, y - 1, 2, false);
+		  circle(x + 2, y - 1, 2, false);
+		};
+
+		Bee.prototype.draw = function () {
+		  	drawBee(this.x, this.y);
+		};
+
+		Bee.prototype.move= function () {
+		  this.x += this.xSpeed;
+		  this.y += this.ySpeed;
+		};
+
+		Bee.prototype.checkCollision= function () {
+		  if(this.x < 7 || this.x > width - 7){
+		  	this.xSpeed = -this.xSpeed;
+		  }
+		  if (this.y < 7 || this.y > height - 7){
+		  	this.ySpeed = -this.ySpeed;
+		  }
+		};
+		var canvas= document.getElementById("canvas");
+		var ctx= canvas.getContext("2d");
+
+
+		var width= canvas.width;
+		var height= canvas.height;
+
+		var bee= [];
+		for (var i=0; i < 80; i++){
+			bee[i]= new Bee();
+
+		}
+		console.log('bee', bee);
+
+		setInterval (function(){
+			ctx.clearRect(0, 0, width, height);
+			for (var k= 0; k < 80; k++){
+				bee[k].draw();
+				bee[k].move();
+				bee[k].checkCollision();
+			}
+			ctx.strokeRect(0, 0, width, height);
+		}, 30);
+
+
+		var pickRandomColor= function(){
+			var colors= ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
+			var color= colors[Math.floor(Math.random() * colors.length)];
+			return color;
+		};
+
+
+
+	</script>
+</body>
+</html>
